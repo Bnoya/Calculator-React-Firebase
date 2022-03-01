@@ -1,18 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {useDispatch} from 'react-redux'
 
 import GoogleButton from 'react-google-button';
 import { Link } from 'react-router-dom';
 
-import { googleLogin } from '../actions/auth';
+import { googleLogin, emailAndPasswordLogin } from '../actions/auth';
+
 
 const LoginScreen = () => {
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const {email, password} = data
+
+    const handelChange = (e) => {
+        const value =  e.target.value; 
+
+        setData({
+            ... data, 
+            [e.target.name]: value
+        })
+
+    }
+
 
     const dispatch = useDispatch();
 
 
     const handelGoogleLogin = () =>{
         dispatch(googleLogin("123456", "pedro"));
+    }
+
+    const handelEmailLogin = (e) => {
+        e.preventDefault();
+
+        if (email.trim() === "" || !email.trim().includes("@") ) {
+            return;
+        } 
+        if (password.trim().length < 6 ) {
+            return;
+        }
+        
+        dispatch(emailAndPasswordLogin(email, password));
     }
 
 
@@ -22,16 +53,16 @@ const LoginScreen = () => {
             <hr />
             <div className='row container'>
 
-            <form className='col s12'>
+            <form onSubmit={handelEmailLogin} className='col s12'>
             <div className="row">
                 <div className="input-field col s12">
                     <i className="material-icons prefix">email</i>
-                    <input id="icon_prefix1" className="materialize-textarea" type="text"/>
+                    <input onChange={handelChange} value={email} name="email" id="icon_prefix1" className="materialize-textarea" type="email"/>
                     <label htmlFor="icon_prefix1">Email</label>
                 </div>
                 <div className="input-field col s12">
                     <i className="material-icons prefix">vpn_key</i>
-                    <input id="icon_prefix2" className="materialize-textarea" type="password"/>
+                    <input onChange={handelChange} value={password} name="password" id="icon_prefix2" className="materialize-textarea" type="password"/>
                     <label htmlFor="icon_prefix2">Password</label>
                 </div>
 
