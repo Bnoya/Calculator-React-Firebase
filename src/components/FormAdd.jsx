@@ -5,8 +5,8 @@ const FormAdd = () => {
 
     const dispatch = useDispatch();
     const [cantidadPago, setCantidadPago] = useState({
-        precioHora: 0,
-        horas: 0,
+        precioHora: "",
+        horas: "",
     });
     const {precioHora, horas} = cantidadPago
 
@@ -26,6 +26,11 @@ const FormAdd = () => {
     const handelSave = () => {
         const cantidadFinal = horas * precioHora;
         dispatch( crearRegistro(cantidadFinal));
+
+        setCantidadPago({
+            precioHora: "",
+            horas: "",
+        })
     } 
     return (
         <div className='row'>
@@ -39,13 +44,13 @@ const FormAdd = () => {
                 <div className='input-field col s12'>
 
                 <i className="material-icons prefix">attach_money</i>
-                <input onChange={handelChange} value={precioHora} name="precioHora" id="icon_prefix1" className="materialize-textarea" type="text" placeholder='Ingrese cantidad de pago'/>
+                <input onChange={handelChange} value={precioHora} name="precioHora" id="icon_prefix1" className="materialize-textarea" type="text" placeholder='Ingrese cantidad por hora' autoComplete='off'/>
                     <br></br>
                 </div>
                 <div className='input-field col s12'>
 
                 <i className="material-icons prefix">access_time</i>
-                <input onChange={handelChange} value={horas} name="horas" id="icon_prefix1" className="materialize-textarea" type="text" placeholder='Ingrese cantidad de horas'/>
+                <input onChange={handelChange} value={horas} name="horas" id="icon_prefix1" className="materialize-textarea" type="text" placeholder='Ingrese cantidad de horas' autoComplete='off'/>
                     <br></br>
                 </div>
                 <button className='btn info' onClick={handelSave}>Calcular y Guardar</button>

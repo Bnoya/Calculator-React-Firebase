@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { login } from '../actions/auth';
+import { leerRegistros } from '../actions/nomina';
 import {firebase} from '../firebase/config-firebase';
+import { loadData } from '../helpers/loadData';
 import AppScreen from '../pages/AppScreen';
-import LoginScreen from '../pages/LoginScreen';
-import RegisterScreen from '../pages/RegisterScreen';
+
 import AuthRouter from './AuthRouter';
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
@@ -19,10 +20,13 @@ const AppRouter = () => {
         useEffect(() => {
         
             firebase.auth().onAuthStateChanged(
-                (user) => {
+                async (user) => {
                     if (user) {
                         distpach(login(user.uid, user.displayName));
-                        setLog(true)
+                        setLog(true);
+
+                        const nominaData = await loadData(user.uid);
+                        distpach(leerRegistros(nominaData));
                     }else {
                         setLog(false);
                     }
@@ -34,11 +38,8 @@ const AppRouter = () => {
         
         return (
             <Router>
-
                 <Routes>
-                
-                    <Route>
-                    <Route exact path="/app" element={
+                    <Route path="/app" element={
                         <PrivateRouter log={log}>
                             <AppScreen />
                         </PrivateRouter>
@@ -48,9 +49,7 @@ const AppRouter = () => {
                             <AuthRouter/>
                         </PublicRouter>
                     }/>
-                    </Route>
                 </Routes>
-
             </Router>
         )
 }
